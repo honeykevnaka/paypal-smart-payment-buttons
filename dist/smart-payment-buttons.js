@@ -10133,7 +10133,7 @@ window.spb = function(modules) {
             Object(lib.getLogger)().info("rest_api_create_order_token");
             var headers = ((_headers15 = {})[constants.HEADERS.AUTHORIZATION] = "Bearer " + accessToken, 
             _headers15[constants.HEADERS.PARTNER_ATTRIBUTION_ID] = partnerAttributionID, _headers15[constants.HEADERS.CLIENT_METADATA_ID] = clientMetadataID, 
-            _headers15[constants.HEADERS.APP_NAME] = constants.SMART_PAYMENT_BUTTONS, _headers15[constants.HEADERS.APP_VERSION] = "5.0.161", 
+            _headers15[constants.HEADERS.APP_NAME] = constants.SMART_PAYMENT_BUTTONS, _headers15[constants.HEADERS.APP_VERSION] = "5.0.162", 
             _headers15);
             var paymentSource = {
                 token: {
@@ -12304,23 +12304,28 @@ window.spb = function(modules) {
                             }));
                         },
                         onApprove: function(_temp) {
-                            var _ref7 = void 0 === _temp ? {} : _temp, _ref7$approveOnClose = _ref7.approveOnClose, payerID = _ref7.payerID, paymentID = _ref7.paymentID, billingToken = _ref7.billingToken, subscriptionID = _ref7.subscriptionID, authCode = _ref7.authCode;
+                            var _ref7 = void 0 === _temp ? {} : _temp, _ref7$approveOnClose = _ref7.approveOnClose, payerID = _ref7.payerID, paymentID = _ref7.paymentID, billingToken = _ref7.billingToken, subscriptionID = _ref7.subscriptionID, authCode = _ref7.authCode, _ref7$delay = _ref7.delay, delay = void 0 === _ref7$delay ? 0 : _ref7$delay;
                             if (void 0 === _ref7$approveOnClose || !_ref7$approveOnClose) {
                                 approved = !0;
                                 Object(lib.getLogger)().info("spb_onapprove_access_token_" + (buyerAccessToken ? "present" : "not_present")).flush();
                                 Object(lib.setBuyerAccessToken)(buyerAccessToken);
-                                return _onApprove({
-                                    payerID: payerID,
-                                    paymentID: paymentID,
-                                    billingToken: billingToken,
-                                    subscriptionID: subscriptionID,
-                                    buyerAccessToken: buyerAccessToken,
-                                    authCode: authCode
-                                }, {
-                                    restart: restart
-                                }).finally((function() {
-                                    return close().then(src.noop);
-                                })).catch(src.noop);
+                                var invokeOnApprove = function() {
+                                    return _onApprove({
+                                        payerID: payerID,
+                                        paymentID: paymentID,
+                                        billingToken: billingToken,
+                                        subscriptionID: subscriptionID,
+                                        buyerAccessToken: buyerAccessToken,
+                                        authCode: authCode
+                                    }, {
+                                        restart: restart
+                                    }).finally((function() {
+                                        return close().then(src.noop);
+                                    })).catch(src.noop);
+                                };
+                                return delay ? Object(lib.sleep)(delay).then((function() {
+                                    return invokeOnApprove();
+                                })) : invokeOnApprove();
                             }
                             doApproveOnClose = !0;
                         },
@@ -16671,7 +16676,7 @@ window.spb = function(modules) {
                     var _ref2;
                     return (_ref2 = {})[sdk_constants_src.FPTI_KEY.CONTEXT_TYPE] = constants.FPTI_CONTEXT_TYPE.BUTTON_SESSION_ID, 
                     _ref2[sdk_constants_src.FPTI_KEY.CONTEXT_ID] = buttonSessionID, _ref2[sdk_constants_src.FPTI_KEY.BUTTON_SESSION_UID] = buttonSessionID, 
-                    _ref2[sdk_constants_src.FPTI_KEY.BUTTON_VERSION] = "5.0.161", _ref2[constants.FPTI_BUTTON_KEY.BUTTON_CORRELATION_ID] = buttonCorrelationID, 
+                    _ref2[sdk_constants_src.FPTI_KEY.BUTTON_VERSION] = "5.0.162", _ref2[constants.FPTI_BUTTON_KEY.BUTTON_CORRELATION_ID] = buttonCorrelationID, 
                     _ref2[sdk_constants_src.FPTI_KEY.STICKINESS_ID] = Object(lib.isAndroidChrome)() ? stickinessID : null, 
                     _ref2[sdk_constants_src.FPTI_KEY.PARTNER_ATTRIBUTION_ID] = partnerAttributionID, 
                     _ref2[sdk_constants_src.FPTI_KEY.USER_ACTION] = commit ? sdk_constants_src.FPTI_USER_ACTION.COMMIT : sdk_constants_src.FPTI_USER_ACTION.CONTINUE, 
@@ -17297,7 +17302,8 @@ window.spb = function(modules) {
             SHIPPING_CALLBACK_PASSED: "shipping_callback_passed",
             SHIPPING_CALLBACK_INVOKED: "shipping_callback_invoked",
             DESKTOP_EXIT_SURVEY_REASON: "desktop_exit_survey_reason",
-            ORDER_CREATED_BY: "order_created_by"
+            ORDER_CREATED_BY: "order_created_by",
+            CALLBACK_DELAY: "callback_delay"
         };
         var FPTI_BUTTON_KEY = {
             BUTTON_LAYOUT: "button_layout",
@@ -18790,7 +18796,7 @@ window.spb = function(modules) {
                     if (intent === _paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__.INTENT.AUTHORIZE) return actions.order.authorize().then(_krakenjs_belter_src__WEBPACK_IMPORTED_MODULE_2__.noop);
                     throw new Error("Unsupported intent for auto-capture: " + intent);
                 };
-            }(intent) : _ref7$onApprove, partnerAttributionID = _ref7.partnerAttributionID, onError = _ref7.onError, clientAccessToken = _ref7.clientAccessToken, vault = _ref7.vault, facilitatorAccessToken = _ref7.facilitatorAccessToken, branded = _ref7.branded, createOrder = _ref7.createOrder, paymentSource = _ref7.paymentSource, featureFlags = _ref7.featureFlags, experiments = _ref7.experiments, beforeOnApprove = _ref7.beforeOnApprove;
+            }(intent) : _ref7$onApprove, partnerAttributionID = _ref7.partnerAttributionID, onError = _ref7.onError, clientAccessToken = _ref7.clientAccessToken, vault = _ref7.vault, facilitatorAccessToken = _ref7.facilitatorAccessToken, branded = _ref7.branded, createOrder = _ref7.createOrder, paymentSource = _ref7.paymentSource, featureFlags = _ref7.featureFlags, experiments = _ref7.experiments, beforeOnApprove = _ref7.beforeOnApprove, delay = _ref7.delay;
             if (!onApprove) throw new Error("Expected onApprove");
             return Object(_krakenjs_belter_src__WEBPACK_IMPORTED_MODULE_2__.memoize)((function(_ref8, _ref9) {
                 var payerID = _ref8.payerID, paymentID = _ref8.paymentID, billingToken = _ref8.billingToken, buyerAccessToken = _ref8.buyerAccessToken, authCode = _ref8.authCode, _ref8$forceRestAPI = _ref8.forceRestAPI, forceRestAPI = void 0 === _ref8$forceRestAPI ? featureFlags.isLsatUpgradable : _ref8$forceRestAPI;
@@ -18803,6 +18809,7 @@ window.spb = function(modules) {
                     _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__.FPTI_KEY.CONTEXT_TYPE] = _constants__WEBPACK_IMPORTED_MODULE_5__.FPTI_CONTEXT_TYPE.ORDER_ID, 
                     _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__.FPTI_KEY.TOKEN] = orderID, 
                     _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__.FPTI_KEY.CONTEXT_ID] = orderID, 
+                    _getLogger$info$track[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__.FPTI_KEY.CALLBACK_DELAY] = delay, 
                     _getLogger$info$track)).flush();
                     billingToken || clientAccessToken || vault || !payerID && branded && Object(_lib__WEBPACK_IMPORTED_MODULE_6__.getLogger)().warn("onapprove_payerid_not_present_for_branded_standalone_button", {
                         orderID: orderID
@@ -19013,7 +19020,7 @@ window.spb = function(modules) {
         function getOnApproveBilling(_ref10) {
             var _ref10$onApprove = _ref10.onApprove, onApprove = void 0 === _ref10$onApprove ? function() {
                 throw new Error("Expected onApprove");
-            } : _ref10$onApprove, onError = _ref10.onError, facilitatorAccessToken = _ref10.facilitatorAccessToken, createOrder = _ref10.createOrder, paymentSource = _ref10.paymentSource, beforeOnApprove = _ref10.beforeOnApprove;
+            } : _ref10$onApprove, onError = _ref10.onError, facilitatorAccessToken = _ref10.facilitatorAccessToken, createOrder = _ref10.createOrder, paymentSource = _ref10.paymentSource, beforeOnApprove = _ref10.beforeOnApprove, delay = _ref10.delay;
             if (!onApprove) throw new Error("Expected onApprove");
             return Object(_krakenjs_belter_src__WEBPACK_IMPORTED_MODULE_2__.memoize)((function(_ref11, _ref12) {
                 var payerID = _ref11.payerID, paymentID = _ref11.paymentID, billingToken = _ref11.billingToken;
@@ -19025,6 +19032,7 @@ window.spb = function(modules) {
                     _getLogger$info$track2[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__.FPTI_KEY.CONTEXT_TYPE] = _constants__WEBPACK_IMPORTED_MODULE_5__.FPTI_CONTEXT_TYPE.ORDER_ID, 
                     _getLogger$info$track2[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__.FPTI_KEY.TOKEN] = orderID, 
                     _getLogger$info$track2[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__.FPTI_KEY.CONTEXT_ID] = orderID, 
+                    _getLogger$info$track2[_paypal_sdk_constants_src__WEBPACK_IMPORTED_MODULE_3__.FPTI_KEY.CALLBACK_DELAY] = delay, 
                     _getLogger$info$track2)).flush();
                     return Object(_api__WEBPACK_IMPORTED_MODULE_4__.getSupplementalOrderInfo)(orderID).then((function(supplementalData) {
                         var data = {

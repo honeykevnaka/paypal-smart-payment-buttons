@@ -472,7 +472,8 @@ window.smartCard = function(modules) {
         SHIPPING_CALLBACK_PASSED: "shipping_callback_passed",
         SHIPPING_CALLBACK_INVOKED: "shipping_callback_invoked",
         DESKTOP_EXIT_SURVEY_REASON: "desktop_exit_survey_reason",
-        ORDER_CREATED_BY: "order_created_by"
+        ORDER_CREATED_BY: "order_created_by",
+        CALLBACK_DELAY: "callback_delay"
     };
     var FPTI_BUTTON_KEY = {
         BUTTON_LAYOUT: "button_layout",
@@ -11667,7 +11668,7 @@ window.smartCard = function(modules) {
             });
             logger.addTrackingBuilder((function() {
                 var _ref2;
-                return (_ref2 = {})[sdk_constants_src.e.BUTTON_VERSION] = "5.0.161", _ref2.hcf_session_id = hcfSessionID, 
+                return (_ref2 = {})[sdk_constants_src.e.BUTTON_VERSION] = "5.0.162", _ref2.hcf_session_id = hcfSessionID, 
                 _ref2.hcf_correlation_id = cardCorrelationID, _ref2[sdk_constants_src.e.PARTNER_ATTRIBUTION_ID] = partnerAttributionID, 
                 _ref2[sdk_constants_src.e.MERCHANT_DOMAIN] = merchantDomain, _ref2[sdk_constants_src.e.TIMESTAMP] = Date.now().toString(), 
                 _ref2.sdk_correlation_id = sdkCorrelationID, _ref2[sdk_constants_src.c.PAYMENTS_SDK] = clientID, 
