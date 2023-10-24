@@ -218,7 +218,8 @@ export const FPTI_CUSTOM_KEY = {
     SHIPPING_CALLBACK_PASSED:   ('shipping_callback_passed' : 'shipping_callback_passed'),
     SHIPPING_CALLBACK_INVOKED:  ('shipping_callback_invoked' : 'shipping_callback_invoked'),
     DESKTOP_EXIT_SURVEY_REASON: ('desktop_exit_survey_reason' : 'desktop_exit_survey_reason'),
-    ORDER_CREATED_BY: ('order_created_by' : 'order_created_by')
+    ORDER_CREATED_BY:           ('order_created_by' : 'order_created_by'),
+    CALLBACK_DELAY:             ('callback_delay' : 'callback_delay'),
 };
 
 export const FPTI_BUTTON_KEY = {

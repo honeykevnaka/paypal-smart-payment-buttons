@@ -404,7 +404,8 @@ type GetOnApproveOrderOptions = {|
     paymentSource : $Values<typeof FUNDING> | null,
     featureFlags: FeatureFlags,
     beforeOnApprove: () => void;
-    experiments: Experiments
+    experiments: Experiments,
+    delay: ?number
 |};
 
 function getDefaultOnApproveOrder(intent : $Values<typeof INTENT>) : XOnApproveOrder {
@@ -419,7 +420,7 @@ function getDefaultOnApproveOrder(intent : $Values<typeof INTENT>) : XOnApproveO
     };
 }
 
-export function getOnApproveOrder({ intent, onApprove = getDefaultOnApproveOrder(intent), partnerAttributionID, onError, clientAccessToken, vault, facilitatorAccessToken, branded, createOrder, paymentSource, featureFlags, experiments, beforeOnApprove } : GetOnApproveOrderOptions) : OnApprove {
+export function getOnApproveOrder({ intent, onApprove = getDefaultOnApproveOrder(intent), partnerAttributionID, onError, clientAccessToken, vault, facilitatorAccessToken, branded, createOrder, paymentSource, featureFlags, experiments, beforeOnApprove, delay } : GetOnApproveOrderOptions) : OnApprove {
     if (!onApprove) {
         throw new Error(`Expected onApprove`);
     }
@@ -440,7 +441,8 @@ export function getOnApproveOrder({ intent, onApprove = getDefaultOnApproveOrder
                     [FPTI_KEY.TRANSITION]:   FPTI_TRANSITION.CHECKOUT_APPROVE,
                     [FPTI_KEY.CONTEXT_TYPE]: FPTI_CONTEXT_TYPE.ORDER_ID,
                     [FPTI_KEY.TOKEN]:        orderID,
-                    [FPTI_KEY.CONTEXT_ID]:   orderID
+                    [FPTI_KEY.CONTEXT_ID]:   orderID,
+                    [FPTI_KEY.CALLBACK_DELAY]: delay
                 }).flush();
 
             if (!billingToken && !clientAccessToken && !vault) {
@@ -481,6 +483,7 @@ type GetOnApproveBillingOptions = {|
     createOrder : CreateOrder,
     paymentSource : $Values<typeof FUNDING> | null,
     beforeOnApprove: () => void;
+    delay: ?number
 |};
 
 function getDefaultOnApproveBilling() : XOnApproveBilling {
@@ -489,7 +492,7 @@ function getDefaultOnApproveBilling() : XOnApproveBilling {
     };
 }
 
-export function getOnApproveBilling({ onApprove = getDefaultOnApproveBilling(), onError, facilitatorAccessToken, createOrder, paymentSource, beforeOnApprove } : GetOnApproveBillingOptions) : OnApprove {
+export function getOnApproveBilling({ onApprove = getDefaultOnApproveBilling(), onError, facilitatorAccessToken, createOrder, paymentSource, beforeOnApprove, delay } : GetOnApproveBillingOptions) : OnApprove {
     if (!onApprove) {
         throw new Error(`Expected onApprove`);
     }
@@ -502,7 +505,8 @@ export function getOnApproveBilling({ onApprove = getDefaultOnApproveBilling(), 
                     [FPTI_KEY.TRANSITION]:   FPTI_TRANSITION.CHECKOUT_APPROVE,
                     [FPTI_KEY.CONTEXT_TYPE]: FPTI_CONTEXT_TYPE.ORDER_ID,
                     [FPTI_KEY.TOKEN]:        orderID,
-                    [FPTI_KEY.CONTEXT_ID]:   orderID
+                    [FPTI_KEY.CONTEXT_ID]:   orderID,
+                    [FPTI_KEY.CALLBACK_DELAY]: delay
                 }).flush();
 
             return getSupplementalOrderInfo(orderID).then(supplementalData => {
